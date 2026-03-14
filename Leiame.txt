@@ -41,4 +41,10 @@ cada um. Acerte subindo mais o navio ou trazendo o mar mais para baixo no viewpo
     Criar cavidades de bocas no conves para os poroes.
 
 14-03
-	Subi site git.
+	Subi site git
+
+	Eixo	Dimensão	De / Até	Descrição	
+	X (Largura)	560u	-280 a +280	De Bombordo (Esq) até Boreste (Dir)	
+	Y (Altura)	220u	-120 a +100	Da Quilha até o Convés	
+	Z (Comprimento)	700u	-350 a +350	Da Popa até a Proa	
+
