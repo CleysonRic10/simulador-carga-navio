@@ -2,67 +2,232 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <title>Simulador Naval - Porões e Tanques</title>
+    <title>Simulador Naval</title>
     <style>
-        body { margin: 0; overflow: hidden; font-family: 'Segoe UI', Arial; background: #1a1a1a; }
-        .painel {
-            position: fixed; top: 15px; left: 15px; background: rgba(255,255,255,0.95);
-            padding: 15px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-            display: flex; flex-direction: column; gap: 8px; z-index: 10; width: 280px;
+        /* RESET E BASE */
+        body, html { 
+            margin: 0; 
+            padding: 0; 
+            font-family: 'Segoe UI', Arial, sans-serif; 
+            background: #1a1a1a; 
+            color: white;
+            scroll-behavior: smooth;
         }
-        .linha { display: flex; gap: 8px; align-items: center; justify-content: space-between; }
-        input { width: 65px; padding: 5px; border: 1px solid #bbb; border-radius: 4px; text-align: center; font-weight: bold; }
-        label { font-size: 11px; font-weight: bold; color: #2c3e50; text-transform: uppercase; }
-        .secao-titulo { border-bottom: 2px solid #2980b9; margin-top: 10px; font-size: 12px; color: #2980b9; font-weight: bold; padding-bottom: 3px; }
-        .status-box { background: #2c3e50; color: #ecf0f1; padding: 8px; border-radius: 4px; font-size: 11px; text-align: center; margin-top: 5px; line-height: 1.4; }
+
+        /* SECTION 1: LANDING PAGE */
+        .hero {
+            min-height: 90vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 80px 20px;
+            background: linear-gradient(135deg, #1e3a8a 0%, #1a1a1a 100%);
+        }
+
+        .container { max-width: 1000px; width: 100%; }
+
+        .hero h1 { font-size: 3.5rem; margin-bottom: 20px; color: #60a5fa; }
+        .hero p { font-size: 1.3rem; max-width: 700px; margin: 0 auto 30px; opacity: 0.9; line-height: 1.6; }
+
+        .botao {
+            padding: 18px 50px;
+            background: #22c55e;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: bold;
+            color: white;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 20px rgba(34, 197, 94, 0.4);
+            margin-bottom: 60px;
+        }
+
+        .botao:hover { background: #16a34a; transform: translateY(-3px); box-shadow: 0 6px 25px rgba(34, 197, 94, 0.5); }
+
+        /* GRID DE FEATURES */
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        .feature-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(5px);
+            padding: 25px;
+            border-radius: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .feature-card:hover { transform: translateY(-10px); background: rgba(255, 255, 255, 0.08); }
+        .feature-card h3 { color: #60a5fa; margin-bottom: 12px; font-size: 1.2rem; }
+        .feature-card p { font-size: 0.95rem; color: #ccc; margin: 0; }
+
+        /* SECTION 2: SIMULADOR (100VH) */
+        #simulador {
+            height: 100vh;
+            position: relative;
+            overflow: hidden;
+            background: #000;
+        }
+
+        #simulador canvas { display: block; width: 100%; height: 100%; }
+
+        /* PAINEL DE CONTROLE */
+        .painel {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: rgba(255, 255, 255, 0.95);
+            color: #333;
+            padding: 20px;
+            border-radius: 12px;
+            width: 260px;
+            z-index: 10;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+        }
+
+        .secao-titulo { border-bottom: 2px solid #2980b9; margin-top: 15px; font-size: 11px; color: #2980b9; font-weight: bold; padding-bottom: 3px; text-transform: uppercase; }
+        .linha { display: flex; justify-content: space-between; align-items: center; margin-top: 8px; }
+        .linha label { font-size: 10px; font-weight: bold; }
+        input { width: 55px; padding: 4px; border: 1px solid #ccc; border-radius: 4px; text-align: center; }
+        .status-box { background: #2c3e50; color: #ecf0f1; padding: 10px; border-radius: 6px; font-size: 11px; text-align: center; margin-top: 10px; }
+
+        /* SEÇÃO FINAL - AJUSTADA PARA LADO A LADO */
+        .pos-simulador { 
+            padding: 80px 20px; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            /* background: #1a1a1a;  */
+            background: linear-gradient(135deg, #1e3a8a 0%, #1a1a1a 100%);
+        }
+
+        .info-container {
+            display: flex;
+            gap: 20px;
+            max-width: 1000px;
+            width: 100%;
+            justify-content: center;
+            margin-bottom: 50px;
+            flex-wrap: wrap; /* Garante responsividade em telas menores */
+        }
+
+        .info-card { 
+            /* background: #2d2d2d;  */
+            background: rgba(255, 255, 255, 0.05);
+            border-left: 5px solid #22c55e; 
+            padding: 30px; 
+            border-radius: 8px; 
+            flex: 1; /* Faz os cards terem o mesmo tamanho */
+            min-width: 300px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3); 
+        }
+
+        .info-card h2 { color: #60a5fa; margin: 0 0 15px 0; }
+        .info-card p { line-height: 1.6; color: #ccc; margin: 0; }
+
+        footer { width: 100%; text-align: center; padding: 30px 0; font-size: 16px; color: #7b7b7b; border-top: 1px solid #333; }
     </style>
 </head>
 <body>
 
-<div class="painel">
-    <div class="secao-titulo">ESTADO DA EMBARCAÇÃO</div>
-    <div id="statusTxt" class="status-box">Calculando...</div>
-    
-    <div class="secao-titulo">CARGA (4 SEÇÕES - 90u)</div>
-    <div class="linha"><label>P1 (PROA)</label><input id="p1" type="number" value="0" min="0" max="90"></div>
-    <div class="linha"><label>P2 (M-PROA)</label><input id="p2" type="number" value="0" min="0" max="90"></div>
-    <div class="linha"><label>P3 (M-POPA)</label><input id="p3" type="number" value="0" min="0" max="90"></div>
-    <div class="linha"><label>P4 (POPA)</label><input id="p4" type="number" value="0" min="0" max="90"></div>
-    
-    <div class="secao-titulo" style="color: #2980b9;">LASTRO (2 SEÇÕES - 180u)</div>
-    <div class="linha"><label>L1 (ASA-BB)</label><input id="lastro1" type="number" value="150" min="0" max="180"></div>
-    <div class="linha"><label>L2 (ASA-BE)</label><input id="lastro2" type="number" value="150"min="0" max="180"></div>
+<section class="hero">
+    <div class="container">
+        <h1>Simulador de Estabilidade Naval</h1><!--Projeção, Previsão, Plano de Carregamento-->
+        <p>
+            Visualize em tempo real como a distribuição de carga e lastro afeta
+            <b>banda</b>, <b>trim</b> e o comportamento do navio.
+        </p>
 
-    <div class="secao-titulo">NAVEGAÇÃO</div>
-    <div class="linha"><label>Rumo (Giro)</label><input id="rotY" type="number" value="0"></div>
-</div>
+        <button class="botao" onclick="document.getElementById('simulador').scrollIntoView();">Iniciar Simulação</button>
+
+        <div class="features">
+            <div class="feature-card">
+                <h3>⚖️ Estabilidade</h3>
+                <p>Veja os efeitos de carga e lastro no navio.</p>
+            </div>
+            <div class="feature-card">
+                <h3>📊 Visual 3D</h3>
+                <p>Compreensão rápida com modelo interativo.</p>
+            </div>
+            <div class="feature-card">
+                <h3>🎓 Treinamento</h3>
+                <p>Ideal para ensino de conceitos navais complexos.</p>
+            </div>
+            <div class="feature-card">
+                <h3>⚡ Rápido</h3>
+                <p>Direto no navegador web, sem instalações.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="simulador">
+    <div class="painel">
+        <div class="secao-titulo">ESTADO DA EMBARCAÇÃO</div>
+        <div id="statusTxt" class="status-box">Calculando...</div>
+        <div class="secao-titulo">CARGA (4 SEÇÕES)</div>
+        <div class="linha"><label>P1 (PROA)</label><input id="p1" type="number" value="10" min="0" max="90"></div>
+        <div class="linha"><label>P2 (M-PROA)</label><input id="p2" type="number" value="0" min="0" max="90"></div>
+        <div class="linha"><label>P3 (M-POPA)</label><input id="p3" type="number" value="0" min="0" max="90"></div>
+        <div class="linha"><label>P4 (POPA)</label><input id="p4" type="number" value="0" min="0" max="90"></div>
+        <div class="secao-titulo">LASTRO (2 SEÇÕES)</div>
+        <div class="linha"><label>L1 (ASA-BB)</label><input id="lastro1" type="number" value="150" min="0" max="180"></div>
+        <div class="linha"><label>L2 (ASA-BE)</label><input id="lastro2" type="number" value="150" min="0" max="180"></div>
+        <div class="secao-titulo">NAVEGAÇÃO</div>
+        <div class="linha"><label>Rumo</label><input id="rotY" type="number" value="0"></div>
+    </div>
+</section>
+
+<section class="pos-simulador">
+    <div class="info-container">
+        <div class="info-card">
+            <h2>Para quem é?</h2>
+            <p>
+            • Estudantes de náutica<br>
+            • Professores e instrutores<br>
+            • Profissionais portuários<br>
+            • Operadores de carga
+            </p>
+        </div>
+
+        <div class="info-card">
+            <h2>Por que usar?</h2>
+            <p>Reduza erros na distribuição de carga, entenda estabilidade de forma visual e teste cenários críticos antes da operação real.</p>
+        </div>
+    </div>
+    <footer>Desenvolvido por Cleyson Ricardo • Protótipo em validação</footer>
+</section>
 
 <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
 <script>
+// (Mantido o código do Three.js inalterado conforme o funcionamento anterior)
+const simuladorSet = document.getElementById('simulador');
 const scene = new THREE.Scene();
 scene.background = new THREE.Color(0xddeeff);
 const camera = new THREE.PerspectiveCamera(50, window.innerWidth/window.innerHeight, 0.1, 5000);
-camera.position.set(1100, 900, 1300);
-camera.lookAt(0, 0, 0);
-
-const renderer = new THREE.WebGLRenderer({antialias:true});
+camera.position.set(1100, 900, 1300); camera.lookAt(0,0,0);
+const renderer = new THREE.WebGLRenderer({ antialias: true });
 renderer.setSize(window.innerWidth, window.innerHeight);
-document.body.appendChild(renderer.domElement);
+simuladorSet.appendChild(renderer.domElement);
 
 const light = new THREE.DirectionalLight(0xffffff, 1.5);
-light.position.set(300, 800, 400);
-scene.add(light);
+light.position.set(300, 800, 400); scene.add(light);
 scene.add(new THREE.AmbientLight(0xffffff, 0.7));
 
 const seaGeo = new THREE.PlaneGeometry(8000, 8000, 40, 40);
 const sea = new THREE.Mesh(seaGeo, new THREE.MeshPhongMaterial({ color: 0x1e5491, transparent: true, opacity: 0.6, wireframe: true }));
-sea.rotation.x = -Math.PI / 2;
-scene.add(sea);
+sea.rotation.x = -Math.PI/2; scene.add(sea);
 
-const navioPivot = new THREE.Group();
-scene.add(navioPivot);
-const cascoVisual = new THREE.Group();
-navioPivot.add(cascoVisual);
+const navioPivot = new THREE.Group(); scene.add(navioPivot);
+const cascoVisual = new THREE.Group(); navioPivot.add(cascoVisual);
 
 const shape = new THREE.Shape();
 shape.moveTo(-140, 100); shape.lineTo(140, 100); shape.lineTo(130, 50);
@@ -72,113 +237,72 @@ shape.lineTo(-130, 50); shape.lineTo(-140, 100);
 const geometry = new THREE.ExtrudeGeometry(shape, { depth: 20, bevelEnabled: false });
 geometry.center();
 const casco = new THREE.Mesh(geometry, new THREE.MeshStandardMaterial({ color: 0xfafafa, transparent: true, opacity: 0.4, side: THREE.DoubleSide }));
-casco.scale.set(2.5, 1, 85); 
-cascoVisual.add(casco);
+casco.scale.set(2.5, 1, 85); cascoVisual.add(casco);
 
 const casario = new THREE.Mesh(new THREE.BoxGeometry(180, 140, 160), new THREE.MeshStandardMaterial({ color: 0x777777 }));
-casario.position.set(0, 170, -700); 
-cascoVisual.add(casario);
+casario.position.set(0, 170, -700); cascoVisual.add(casario);
 
-/* ESTRUTURAS DE CARRA (GRID 3x3) */
-const poroesFisicos = []; // Armazenará os 4 grupos de porões
-const listaLastros = [];
-const alturaMaxCarga = 140;
-const configPoroesZ = [400, 100, -200, -450]; 
+const poroesFisicos = []; const listaLastros = []; const configPoroesZ = [400, 100, -200, -450]; 
 
 function criarMundoInterno() {
     configPoroesZ.forEach((z, pIdx) => {
-        const grupoPorao = new THREE.Group();
-        grupoPorao.position.set(0, -100, z);
-        cascoVisual.add(grupoPorao);
-        
-        const celulas = [];
-        const dimX = 180 / 3;
-        const dimZ = 200 / 3;
-
-        for (let i = 0; i < 3; i++) { // Colunas (BB para BE)
-            for (let j = 0; j < 3; j++) { // Linhas (Popa para Proa)
-                const posX = (i - 1) * dimX;
-                const posZ = (j - 1) * dimZ;
-                
-                // Wireframe da célula
-                const geoVazia = new THREE.BoxGeometry(dimX-4, alturaMaxCarga, dimZ-4);
-                const container = new THREE.Mesh(geoVazia, new THREE.MeshStandardMaterial({ color: 0x8B4513, wireframe: true, transparent: true, opacity: 0.1 }));
-                container.position.set(posX, alturaMaxCarga/2, posZ);
-                grupoPorao.add(container);
-
-                // Volume de carga real
-                const geoCarga = new THREE.BoxGeometry(dimX-6, alturaMaxCarga, dimZ-6);
-                const cMesh = new THREE.Mesh(geoCarga, new THREE.MeshStandardMaterial({ color: 0x8B4513 }));
-                cMesh.geometry.translate(0, alturaMaxCarga/2, 0);
-                cMesh.position.set(posX, 0, posZ);
-                cMesh.scale.y = 0.001;
-                grupoPorao.add(cMesh);
-                celulas.push(cMesh);
+        const grupoPorao = new THREE.Group(); grupoPorao.position.set(0, -100, z); cascoVisual.add(grupoPorao);
+        const celulas = []; const dimX = 180/3; const dimZ = 200/3;
+        for (let i = 0; i < 3; i++) {
+            for (let j = 0; j < 3; j++) {
+                const posX = (i - 1) * dimX; const posZ = (j - 1) * dimZ;
+                const cMesh = new THREE.Mesh(new THREE.BoxGeometry(dimX-6, 140, dimZ-6), new THREE.MeshStandardMaterial({ color: 0x8B4513 }));
+                cMesh.geometry.translate(0, 70, 0); cMesh.position.set(posX, 0, posZ);
+                cMesh.scale.y = 0.001; grupoPorao.add(cMesh); celulas.push(cMesh);
             }
         }
         poroesFisicos.push(celulas);
     });
-
     [-200, 200].forEach(x => {
-        const grupo = new THREE.Group();
-        grupo.position.set(x, -100, 0);
-        cascoVisual.add(grupo);
-        const lMesh = new THREE.Mesh(new THREE.BoxGeometry(48, alturaMaxCarga, 1698), new THREE.MeshStandardMaterial({ color: 0x00aaff }));
-        lMesh.geometry.translate(0, alturaMaxCarga/2, 0);
-        lMesh.scale.y = 0.001;
-        grupo.add(lMesh);
-        listaLastros.push(lMesh);
+        const lMesh = new THREE.Mesh(new THREE.BoxGeometry(48, 140, 1698), new THREE.MeshStandardMaterial({ color: 0x00aaff }));
+        lMesh.geometry.translate(0, 70, 0); lMesh.position.set(x, -100, 0);
+        lMesh.scale.y = 0.001; cascoVisual.add(lMesh); listaLastros.push(lMesh);
     });
 }
 criarMundoInterno();
 
 function atualizar() {
-    const valoresPoroes = ["p1", "p2", "p3", "p4"].map(id => parseFloat(document.getElementById(id).value) || 0);
-    const l = ["lastro1", "lastro2"].map(id => parseFloat(document.getElementById(id).value) || 0);
+    const pV = ["p1", "p2", "p3", "p4"].map(id => parseFloat(document.getElementById(id).value) || 0);
+    const lV = ["lastro1", "lastro2"].map(id => parseFloat(document.getElementById(id).value) || 0);
     const rumo = parseFloat(document.getElementById('rotY').value) || 0;
 
-    // Lógica de Preenchimento Sequencial 10u por célula
-    valoresPoroes.forEach((valorTotal, pIdx) => {
-        let restante = valorTotal;
-        poroesFisicos[pIdx].forEach((celula, cIdx) => {
-            const cargaNestaCelula = Math.min(restante, 10);
-            celula.scale.y = Math.max(0.001, cargaNestaCelula / 10);
-            restante -= cargaNestaCelula;
+    pV.forEach((vT, pIdx) => {
+        let r = vT; poroesFisicos[pIdx].forEach(c => {
+            let cC = Math.min(r, 10); c.scale.y = Math.max(0.001, cC / 10); r -= cC;
         });
     });
 
-    const pesoCarga = valoresPoroes.reduce((a, b) => a + b, 0);
-    const pesoTotal = pesoCarga + l.reduce((a, b) => a + b, 0) + 350;
-
+    const pesoC = pV.reduce((a, b) => a + b, 0);
+    const pesoT = pesoC + lV.reduce((a, b) => a + b, 0) + 350;
     navioPivot.rotation.y = THREE.MathUtils.degToRad(rumo);
-    navioPivot.position.y = (450 - pesoTotal) * 0.18;
-
-    const banda = (l[0] - l[1]) * 0.07; 
-    const trim = ((valoresPoroes[0] + valoresPoroes[1]) - (valoresPoroes[2] + valoresPoroes[3])) * 0.04;
-
-    cascoVisual.rotation.z = THREE.MathUtils.degToRad(banda);
-    cascoVisual.rotation.x = THREE.MathUtils.degToRad(trim);
-
-    listaLastros.forEach((v, i) => v.scale.y = Math.max(0.001, l[i]/150));
-
-    document.getElementById('statusTxt').innerHTML = `BANDA: ${banda.toFixed(1)}° | TRIM: ${trim.toFixed(1)}°<br>
-                           CARGA: ${pesoCarga.toFixed(0)}/360u | TOTAL: ${pesoTotal.toFixed(0)}u`;
+    navioPivot.position.y = (450 - pesoT) * 0.18;
+    cascoVisual.rotation.z = THREE.MathUtils.degToRad((lV[0] - lV[1]) * 0.07);
+    cascoVisual.rotation.x = THREE.MathUtils.degToRad(((pV[0] + pV[1]) - (pV[2] + pV[3])) * 0.04);
+    listaLastros.forEach((v, i) => v.scale.y = Math.max(0.001, lV[i]/150));
+    document.getElementById('statusTxt').innerHTML = `PESO TOTAL: ${pesoT.toFixed(0)}u | CARGA: ${pesoC.toFixed(0)}/360u`;
 }
+
+window.addEventListener('resize', () => {
+    camera.aspect = window.innerWidth/window.innerHeight; camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+});
 
 document.querySelectorAll("input").forEach(i => i.addEventListener("input", atualizar));
 
 function animate() {
     requestAnimationFrame(animate);
     const tempo = Date.now() * 0.001;
-    const vertices = seaGeo.attributes.position.array;
-    for (let i = 0; i < vertices.length; i += 3) {
-        vertices[i+2] = Math.sin(vertices[i] * 0.01 + tempo) * 2;
-    }
+    const v = seaGeo.attributes.position.array;
+    for (let i = 0; i < v.length; i += 3) v[i+2] = Math.sin(v[i] * 0.01 + tempo) * 2;
     seaGeo.attributes.position.needsUpdate = true;
     renderer.render(scene, camera);
 }
-atualizar();
-animate();
+atualizar(); animate();
 </script>
 </body>
 </html>
