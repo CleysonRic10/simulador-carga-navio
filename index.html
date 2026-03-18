@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <title>Simulador Naval - Grid 3x3 Progressivo</title>
+    <title>Simulador Naval - Porões e Tanques</title>
     <style>
         body { margin: 0; overflow: hidden; font-family: 'Segoe UI', Arial; background: #1a1a1a; }
         .painel {
@@ -23,15 +23,15 @@
     <div class="secao-titulo">ESTADO DA EMBARCAÇÃO</div>
     <div id="statusTxt" class="status-box">Calculando...</div>
     
-    <div class="secao-titulo">4 PORÕES (Grid 3x3 Interno)</div>
-    <div class="linha"><label>P1 (POPA)</label><input id="p1" type="number" value="0" min="0" max="90"></div>
-    <div class="linha"><label>P2 (M-POPA)</label><input id="p2" type="number" value="0" min="0" max="90"></div>
-    <div class="linha"><label>P3 (M-PROA)</label><input id="p3" type="number" value="0" min="0" max="90"></div>
-    <div class="linha"><label>P4 (PROA)</label><input id="p4" type="number" value="0" min="0" max="90"></div>
+    <div class="secao-titulo">CARGA (4 SEÇÕES - 90u)</div>
+    <div class="linha"><label>P1 (PROA)</label><input id="p1" type="number" value="0" min="0" max="90"></div>
+    <div class="linha"><label>P2 (M-PROA)</label><input id="p2" type="number" value="0" min="0" max="90"></div>
+    <div class="linha"><label>P3 (M-POPA)</label><input id="p3" type="number" value="0" min="0" max="90"></div>
+    <div class="linha"><label>P4 (POPA)</label><input id="p4" type="number" value="0" min="0" max="90"></div>
     
-    <div class="secao-titulo" style="color: #2980b9;">LASTRO</div>
-    <div class="linha"><label>L1 (ASA-BB)</label><input id="lastro1" type="number" value="150"></div>
-    <div class="linha"><label>L2 (ASA-BE)</label><input id="lastro2" type="number" value="150"></div>
+    <div class="secao-titulo" style="color: #2980b9;">LASTRO (2 SEÇÕES - 180u)</div>
+    <div class="linha"><label>L1 (ASA-BB)</label><input id="lastro1" type="number" value="150" min="0" max="180"></div>
+    <div class="linha"><label>L2 (ASA-BE)</label><input id="lastro2" type="number" value="150"min="0" max="180"></div>
 
     <div class="secao-titulo">NAVEGAÇÃO</div>
     <div class="linha"><label>Rumo (Giro)</label><input id="rotY" type="number" value="0"></div>
