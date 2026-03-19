@@ -2,7 +2,8 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <title>Simulador Naval</title>
+    <title>Simulador Naval - Estabilidade Profissional</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <style>
         /* RESET E BASE */
         body, html { 
@@ -27,13 +28,12 @@
         }
 
         .container { max-width: 1000px; width: 100%; }
-
         .hero h1 { font-size: 3.5rem; margin-bottom: 20px; color: #60a5fa; }
         .hero p { font-size: 1.3rem; max-width: 700px; margin: 0 auto 30px; opacity: 0.9; line-height: 1.6; }
 
         .botao {
             padding: 18px 50px;
-            background: #22c55e;
+            background: #60a5fa;
             border: none;
             border-radius: 50px;
             cursor: pointer;
@@ -45,9 +45,8 @@
             margin-bottom: 60px;
         }
 
-        .botao:hover { background: #16a34a; transform: translateY(-3px); box-shadow: 0 6px 25px rgba(34, 197, 94, 0.5); }
+        .botao:hover { background: #4c82c5; transform: translateY(-3px); box-shadow: 0 6px 25px rgba(34, 197, 94, 0.5); }
 
-        /* GRID DE FEATURES */
         .features {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -69,7 +68,7 @@
         .feature-card h3 { color: #60a5fa; margin-bottom: 12px; font-size: 1.2rem; }
         .feature-card p { font-size: 0.95rem; color: #ccc; margin: 0; }
 
-        /* SECTION 2: SIMULADOR (100VH) */
+        /* SECTION 2: SIMULADOR */
         #simulador {
             height: 100vh;
             position: relative;
@@ -79,7 +78,6 @@
 
         #simulador canvas { display: block; width: 100%; height: 100%; }
 
-        /* PAINEL DE CONTROLE */
         .painel {
             position: absolute;
             top: 20px;
@@ -97,15 +95,43 @@
         .linha { display: flex; justify-content: space-between; align-items: center; margin-top: 8px; }
         .linha label { font-size: 10px; font-weight: bold; }
         input { width: 55px; padding: 4px; border: 1px solid #ccc; border-radius: 4px; text-align: center; }
+        
         .status-box { background: #2c3e50; color: #ecf0f1; padding: 10px; border-radius: 6px; font-size: 11px; text-align: center; margin-top: 10px; }
+        
+        #riscoBox { 
+            margin-top: 10px; 
+            padding: 12px; 
+            border-radius: 6px; 
+            color: white; 
+            font-weight: bold; 
+            font-size: 12px; 
+            text-align: center; 
+            transition: background 0.4s ease;
+        }
 
-        /* SEÇÃO FINAL - AJUSTADA PARA LADO A LADO */
+        .btn-pdf {
+            width: 100%;
+            margin-top: 15px;
+            padding: 12px;
+            background: #60a5fa;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 11px;
+            text-transform: uppercase;
+            transition: 0.3s;
+        }
+
+        .btn-pdf:hover { background: #4c82c5; transform: scale(1.02); }
+
+        /* SECTION 3: INFORMAÇÕES POS-SIMULADOR */
         .pos-simulador { 
             padding: 80px 20px; 
             display: flex; 
             flex-direction: column; 
             align-items: center; 
-            /* background: #1a1a1a;  */
             background: linear-gradient(135deg, #1e3a8a 0%, #1a1a1a 100%);
         }
 
@@ -116,16 +142,15 @@
             width: 100%;
             justify-content: center;
             margin-bottom: 50px;
-            flex-wrap: wrap; /* Garante responsividade em telas menores */
+            flex-wrap: wrap;
         }
 
         .info-card { 
-            /* background: #2d2d2d;  */
             background: rgba(255, 255, 255, 0.05);
             border-left: 5px solid #22c55e; 
             padding: 30px; 
             border-radius: 8px; 
-            flex: 1; /* Faz os cards terem o mesmo tamanho */
+            flex: 1; 
             min-width: 300px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.3); 
         }
@@ -140,31 +165,14 @@
 
 <section class="hero">
     <div class="container">
-        <h1>Simulador de Estabilidade Naval</h1><!--Projeção, Previsão, Plano de Carregamento-->
-        <p>
-            Visualize em tempo real como a distribuição de carga e lastro afeta
-            <b>banda</b>, <b>trim</b> e o comportamento do navio.
-        </p>
-
-        <button class="botao" onclick="document.getElementById('simulador').scrollIntoView();">Iniciar Simulação</button>
-
+        <h1>Simulador de Estabilidade Naval</h1>
+        <p>Análise técnica avançada de <b>GM</b>, <b>Banda</b> e <b>Trim</b> em ambiente 3D interativo.</p>
+        <button class="botao" onclick="document.getElementById('simulador').scrollIntoView();">Abrir Simulador</button>
         <div class="features">
-            <div class="feature-card">
-                <h3>⚖️ Estabilidade</h3>
-                <p>Veja os efeitos de carga e lastro no navio.</p>
-            </div>
-            <div class="feature-card">
-                <h3>📊 Visual 3D</h3>
-                <p>Compreensão rápida com modelo interativo.</p>
-            </div>
-            <div class="feature-card">
-                <h3>🎓 Treinamento</h3>
-                <p>Ideal para ensino de conceitos navais complexos.</p>
-            </div>
-            <div class="feature-card">
-                <h3>⚡ Rápido</h3>
-                <p>Direto no navegador web, sem instalações.</p>
-            </div>
+            <div class="feature-card"><h3>⚖️ Estabilidade</h3><p>Efeitos de carga e lastro.</p></div>
+            <div class="feature-card"><h3>📊 Visual 3D</h3><p>Modelo interativo em tempo real.</p></div>
+            <div class="feature-card"><h3>🎓 Relatório</h3><p>Teoria aplicada. Exporte os resultados em PDF.</p></div>
+            <div class="feature-card"><h3>⚡ Rápido</h3><p>Direto no seu navegador web, sem programas.</p></div>
         </div>
     </div>
 </section>
@@ -173,16 +181,22 @@
     <div class="painel">
         <div class="secao-titulo">ESTADO DA EMBARCAÇÃO</div>
         <div id="statusTxt" class="status-box">Calculando...</div>
+        <div id="riscoBox">ANALISANDO...</div>
+
         <div class="secao-titulo">CARGA (4 SEÇÕES)</div>
         <div class="linha"><label>P1 (PROA)</label><input id="p1" type="number" value="10" min="0" max="90"></div>
         <div class="linha"><label>P2 (M-PROA)</label><input id="p2" type="number" value="0" min="0" max="90"></div>
         <div class="linha"><label>P3 (M-POPA)</label><input id="p3" type="number" value="0" min="0" max="90"></div>
         <div class="linha"><label>P4 (POPA)</label><input id="p4" type="number" value="0" min="0" max="90"></div>
+        
         <div class="secao-titulo">LASTRO (2 SEÇÕES)</div>
         <div class="linha"><label>L1 (ASA-BB)</label><input id="lastro1" type="number" value="150" min="0" max="180"></div>
         <div class="linha"><label>L2 (ASA-BE)</label><input id="lastro2" type="number" value="150" min="0" max="180"></div>
+        
         <div class="secao-titulo">NAVEGAÇÃO</div>
         <div class="linha"><label>Rumo</label><input id="rotY" type="number" value="0"></div>
+
+        <button class="btn-pdf" onclick="exportarPDF()">📄 Exportar Relatório PDF</button>
     </div>
 </section>
 
@@ -190,25 +204,18 @@
     <div class="info-container">
         <div class="info-card">
             <h2>Para quem é?</h2>
-            <p>
-            • Estudantes de náutica<br>
-            • Professores e instrutores<br>
-            • Profissionais portuários<br>
-            • Operadores de carga
-            </p>
+            <p>• Estudantes de náutica<br>• Professores<br>• Profissionais portuários</p>
         </div>
-
         <div class="info-card">
             <h2>Por que usar?</h2>
-            <p>Reduza erros na distribuição de carga, entenda estabilidade de forma visual e teste cenários críticos antes da operação real.</p>
+            <p>Entenda de forma visual com testes de cenários críticos antes da operação real, garantindo uma operação segura.</p>
         </div>
     </div>
-    <footer>Desenvolvido por Cleyson Ricardo • Protótipo em validação</footer>
+    <footer>Desenvolvido por Cleyson Ricardo • Protótipo de Engenharia Naval</footer>
 </section>
 
 <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
 <script>
-// (Mantido o código do Three.js inalterado conforme o funcionamento anterior)
 const simuladorSet = document.getElementById('simulador');
 const scene = new THREE.Scene();
 scene.background = new THREE.Color(0xddeeff);
@@ -266,6 +273,8 @@ function criarMundoInterno() {
 }
 criarMundoInterno();
 
+let dadosAtuais = {};
+
 function atualizar() {
     const pV = ["p1", "p2", "p3", "p4"].map(id => parseFloat(document.getElementById(id).value) || 0);
     const lV = ["lastro1", "lastro2"].map(id => parseFloat(document.getElementById(id).value) || 0);
@@ -278,13 +287,89 @@ function atualizar() {
     });
 
     const pesoC = pV.reduce((a, b) => a + b, 0);
-    const pesoT = pesoC + lV.reduce((a, b) => a + b, 0) + 350;
+    const pesoL = lV.reduce((a, b) => a + b, 0);
+    const pesoT = pesoC + pesoL + 350;
+
+    const banda = (lV[0] - lV[1]) * 0.07;
+    const trim = ((pV[0] + pV[1]) - (pV[2] + pV[3])) * 0.04;
+
+    const GM_Base = 4.5; 
+    const penalidadeAltura = (pesoC / 360) * 3.0; 
+    const bonusLastro = (pesoL / 300) * 1.5;     
+    const GM = GM_Base - penalidadeAltura + bonusLastro;
+
     navioPivot.rotation.y = THREE.MathUtils.degToRad(rumo);
     navioPivot.position.y = (450 - pesoT) * 0.18;
-    cascoVisual.rotation.z = THREE.MathUtils.degToRad((lV[0] - lV[1]) * 0.07);
-    cascoVisual.rotation.x = THREE.MathUtils.degToRad(((pV[0] + pV[1]) - (pV[2] + pV[3])) * 0.04);
+    cascoVisual.rotation.z = THREE.MathUtils.degToRad(banda);
+    cascoVisual.rotation.x = THREE.MathUtils.degToRad(trim);
     listaLastros.forEach((v, i) => v.scale.y = Math.max(0.001, lV[i]/150));
-    document.getElementById('statusTxt').innerHTML = `PESO TOTAL: ${pesoT.toFixed(0)}u | CARGA: ${pesoC.toFixed(0)}/360u`;
+
+    dadosAtuais = { pV, lV, pesoT, banda, trim, GM };
+
+    document.getElementById('statusTxt').innerHTML = `PESO: ${pesoT.toFixed(0)}u | GM: ${GM.toFixed(2)}m`;
+
+    const riscoBox = document.getElementById("riscoBox");
+    const absBanda = Math.abs(banda);
+    const absTrim = Math.abs(trim);
+    let statusMsg = ""; let cor = "";
+
+    const pesoMaximoSeguro = 950;                           // Peso Max = 950 - 1035 - 
+
+    if (pesoT > pesoMaximoSeguro) {
+        statusMsg = "❌ SOBRECARGA (AFUNDANDO)";
+        cor = "#e74c3c";
+    } else if (absBanda < 2 && absTrim < 2 && GM > 2.2) {            
+        statusMsg = "✅ ESTÁVEL"; cor = "#27ae60";
+    } else if (absBanda < 5 && absTrim < 5 && GM > 1.8) {     
+        statusMsg = "⚠️ ATENÇÃO"; cor = "#f39c12";
+    } else {
+        statusMsg = "❌ CRÍTICO"; cor = "#e74c3c";
+    }
+
+    riscoBox.innerHTML = `${statusMsg}<br>Banda: ${banda.toFixed(1)}° | Trim: ${trim.toFixed(1)}°`;
+    riscoBox.style.background = cor;
+}
+
+function exportarPDF() {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+    const data = new Date().toLocaleString();
+    const pesoMaximoSeguro = 950;
+
+    doc.setFontSize(18);
+    doc.text("RELATÓRIO DE ESTABILIDADE NAVAL", 20, 20);
+    doc.setFontSize(12);
+    doc.text(`Data da Simulação: ${data}`, 20, 30);
+    doc.text("--------------------------------------------------", 20, 35);
+
+    doc.text("DISTRIBUIÇÃO DE CARGA POR SEÇÃO:", 20, 45);
+    doc.text(`Proa (P1/P2): ${dadosAtuais.pV[0]}u / ${dadosAtuais.pV[1]}u`, 30, 52);
+    doc.text(`Popa (P3/P4): ${dadosAtuais.pV[2]}u / ${dadosAtuais.pV[3]}u`, 30, 59);
+
+    doc.text("NÍVEIS DE LASTRO:", 20, 70);
+    doc.text(`Bombordo (L1): ${dadosAtuais.lV[0]}u`, 30, 77);
+    doc.text(`Estibordo (L2): ${dadosAtuais.lV[1]}u`, 30, 84);
+
+    doc.text("ANÁLISE DE ESTABILIDADE:", 20, 95);
+    
+    if(dadosAtuais.pesoT > pesoMaximoSeguro) {
+        doc.setTextColor(200, 0, 0);
+        // doc.text("ALERTA: SOBRECARGA CRÍTICA (AFUNDAMENTO)", 30, 102);
+        // doc.text(`AFUNDAMENTO por Sobrecarga: ${dadosAtuais.pesoT.toFixed(1)} tons`, 30, 102);
+        doc.text(`ALERTA Sobrecarga (Peso): ${pesoMaximoSeguro.toFixed(0)}u`, 30, 102);
+    } else if(dadosAtuais.GM < 1.8) {
+        doc.setTextColor(200, 0, 0);
+        doc.text(`Altura Metacêntrica (GM): ${dadosAtuais.GM.toFixed(2)} m (BAIXO)`, 30, 102);
+    } else {
+        doc.text(`Altura Metacêntrica (GM): ${dadosAtuais.GM.toFixed(2)} m`, 30, 102);
+    }
+
+    doc.setTextColor(0,0,0);
+    doc.text(`Banda Lateral: ${dadosAtuais.banda.toFixed(2)}°`, 30, 109);
+    doc.text(`Trim Longitudinal: ${dadosAtuais.trim.toFixed(2)}°`, 30, 116);
+    doc.text(`Deslocamento (Peso): ${dadosAtuais.pesoT.toFixed(0)}u`, 30, 123);
+
+    doc.save("Relatorio_Estabilidade.pdf");
 }
 
 window.addEventListener('resize', () => {
