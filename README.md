@@ -39,7 +39,7 @@ https://cleysonric10.github.io/carga_navio/
 
 ### Interface do simulador: 
 
-![Simulador](imagem2.png)
+![Simulador](imagem3.png)
 ---
 
 ## 🧠 Diferencial do projeto
